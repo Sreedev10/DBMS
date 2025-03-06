@@ -1,0 +1,602 @@
+s2mcabatch2@LAB6:~/Desktop/dbms$ mysql -u s2mcabatch2 -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.36-0ubuntu0.20.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show database;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'database' at line 1
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| companydb          |
+| information_schema |
+| mysql              |
+| org                |
+| organisation       |
+| organisations      |
+| organization       |
+| performance_schema |
+| sys                |
++--------------------+
+9 rows in set (0.01 sec)
+
+mysql> create database region53;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> use database;
+ERROR 1049 (42000): Unknown database 'database'
+mysql> use region53;
+Database changed
+mysql> create table region(region_id int primary key,region_name varchar(20));
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> desc region;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| region_id   | int         | NO   | PRI | NULL    |       |
+| region_name | varchar(20) | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> create table country(country_id int primary key,country_name varchar(20),foreign key(region_id) references region(region_id));
+ERROR 1072 (42000): Key column 'region_id' doesn't exist in table
+mysql> create table country(country_id int primary key,country_name varchar(20),region_id int,foreign key(region_id) references region(region_id));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> desc country;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| country_id   | int         | NO   | PRI | NULL    |       |
+| country_name | varchar(20) | YES  |     | NULL    |       |
+| region_id    | int         | YES  | MUL | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> create table location(location_id int primary key,address text,postal_code int,city varchar(20),state_province varchar(20),country_id int,foreign key(country_id) references country(country_id));
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> desc location;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| location_id    | int         | NO   | PRI | NULL    |       |
+| address        | text        | YES  |     | NULL    |       |
+| postal_code    | int         | YES  |     | NULL    |       |
+| city           | varchar(20) | YES  |     | NULL    |       |
+| state_province | varchar(20) | YES  |     | NULL    |       |
+| country_id     | int         | YES  | MUL | NULL    |       |
++----------------+-------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> create table department(department_id int primary key,department_name varchar(20),location_id int,foreign key(location_id) references location(location_id));
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> desc department;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| department_id   | int         | NO   | PRI | NULL    |       |
+| department_name | varchar(20) | YES  |     | NULL    |       |
+| location_id     | int         | YES  | MUL | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> create table job(job_id int primary key,job_title varchar(20),,in_salary int,max_salary int);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',in_salary int,max_salary int)' at line 1
+mysql> create table job(job_id int primary key,job_title varchar(20),min_salary int,max_salary int);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> desc job;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| job_id     | int         | NO   | PRI | NULL    |       |
+| job_title  | varchar(20) | YES  |     | NULL    |       |
+| min_salary | int         | YES  |     | NULL    |       |
+| max_salary | int         | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> create table employee01(employee_id int primary key,first_name varchar(20),last_name varchar(20),email varchar(20),phone_number int(11),hire_date date,foreign key(job_id) references job(job_id),salary int,manager_id varchar(5),department_id int,foreign key(department_id) references department(department_id));
+ERROR 1072 (42000): Key column 'job_id' doesn't exist in table
+mysql> create table employee01(employee_id int primary key,first_name varchar(20),last_name varchar(20),email varchar(20),phone_number int(11),hire_date date,job_id int,foreign key(job_id) references job(job_id),salary int,manager_id varchar(5),department_id int,foreign key(department_id) references department(department_id));
+Query OK, 0 rows affected, 1 warning (0.06 sec)
+
+mysql> desc employee01;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| employee_id   | int         | NO   | PRI | NULL    |       |
+| first_name    | varchar(20) | YES  |     | NULL    |       |
+| last_name     | varchar(20) | YES  |     | NULL    |       |
+| email         | varchar(20) | YES  |     | NULL    |       |
+| phone_number  | int         | YES  |     | NULL    |       |
+| hire_date     | date        | YES  |     | NULL    |       |
+| job_id        | int         | YES  | MUL | NULL    |       |
+| salary        | int         | YES  |     | NULL    |       |
+| manager_id    | varchar(5)  | YES  |     | NULL    |       |
+| department_id | int         | YES  | MUL | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+10 rows in set (0.00 sec)
+
+mysql> create table dependent(dependent_id int primary key,job_title varchar(20),first_name varchar(20),last_name varchar(20),relationship varchar(20),employee_id int,foreign key(employee_id) references
+employee0
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> desc dependent;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| dependent_id | int         | NO   | PRI | NULL    |       |
+| job_title    | varchar(20) | YES  |     | NULL    |       |
+| first_name   | varchar(20) | YES  |     | NULL    |       |
+| last_name    | varchar(20) | YES  |     | NULL    |       |
+| relationship | varchar(20) | YES  |     | NULL    |       |
+| employee_id  | int         | YES  | MUL | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> INSERT INTO country (country_id, country_name, region_id) 
+    -> VALUES (1, 'India', 2);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`region53`.`country`, CONSTRAINT `country_ibfk_1` FOREIGN KEY (`region_id`) REFERENCES `region` (`region_id`))
+mysql> INSERT INTO region (region_id, region_name) 
+    -> VALUES (1, 'America')
+    -> ^C
+
+^C
+mysql> INSERT INTO region (region_id, region_name)VALUES (1, 'America')
+    -> 
+    -> ^C
+
+^C
+mysql> INSERT INTO region (region_id, region_name)VALUES (1, 'America');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from table region;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table region' at line 1
+mysql> select * from region;
++-----------+-------------+
+| region_id | region_name |
++-----------+-------------+
+|         1 | America     |
++-----------+-------------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO region (region_id, region_name)VALUES (2, 'India');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO region (region_id, region_name)VALUES (3, 'Argentina');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO region (region_id, region_name)VALUES (4, 'Brazil');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO region (region_id, region_name)VALUES (5, 'Spain');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO region (region_id, region_name)VALUES (6, 'France');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from region;
++-----------+-------------+
+| region_id | region_name |
++-----------+-------------+
+|         1 | America     |
+|         2 | India       |
+|         3 | Argentina   |
+|         4 | Brazil      |
+|         5 | Spain       |
+|         6 | France      |
++-----------+-------------+
+6 rows in set (0.00 sec)
+
+mysql> DELETE FROM region WHERE region_name IN ('Europe', 'Africa');
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+mysql> DELETE FROM region WHERE region_id='1';
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from region;
++-----------+-------------+
+| region_id | region_name |
++-----------+-------------+
+|         2 | India       |
+|         3 | Argentina   |
+|         4 | Brazil      |
+|         5 | Spain       |
+|         6 | France      |
++-----------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> DELETE FROM region WHERE region_id='2';
+Query OK, 1 row affected (0.01 sec)
+
+mysql> DELETE FROM region WHERE region_id='3';
+Query OK, 1 row affected (0.01 sec)
+
+mysql> DELETE FROM region WHERE region_id='4';
+Query OK, 1 row affected (0.01 sec)
+
+mysql> DELETE FROM region WHERE region_id='5';
+Query OK, 1 row affected (0.02 sec)
+
+mysql> DELETE FROM region WHERE region_id='6';
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from region;
+Empty set (0.00 sec)
+
+mysql> INSERT INTO region (region_id, region_name)VALUES (1, 'North America');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from region;
++-----------+---------------+
+| region_id | region_name   |
++-----------+---------------+
+|         1 | North America |
++-----------+---------------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO region (region_id, region_name)VALUES (2, 'South America');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO region (region_id, region_name)VALUES (3, 'Europe');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO region (region_id, region_name)VALUES (4, 'Asia');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO region (region_id, region_name)VALUES (5,'Africa');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from region;
++-----------+---------------+
+| region_id | region_name   |
++-----------+---------------+
+|         1 | North America |
+|         2 | South America |
+|         3 | Europe        |
+|         4 | Asia          |
+|         5 | Africa        |
++-----------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO country (country_id, country_name, region_id)  VALUES (1, 'India', 4);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO country (country_id, country_name, region_id)  VALUES (2, 'Argentina',2);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO country (country_id, country_name, region_id)  VALUES (3, 'Spain',3);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO country (country_id, country_name, region_id)  VALUES (4, 'Nigeria',5);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO country (country_id, country_name, region_id)  VALUES (5, 'Canada',1);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from country;
++------------+--------------+-----------+
+| country_id | country_name | region_id |
++------------+--------------+-----------+
+|          1 | India        |         4 |
+|          2 | Argentina    |         2 |
+|          3 | Spain        |         3 |
+|          4 | Nigeria      |         5 |
+|          5 | Canada       |         1 |
++------------+--------------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO location (location_id, address, postal_code, city, state_province, country_id) 
+    -> VALUES (2, '456 Elm St', 67890, 'Mumbai', 'Maharashtra', 2);^C^C
+
+^C
+mysql> INSERT INTO location (location_id, address, postal_code, city, state_province, country_id)VALUES (1, '456 Elm St', 67890, 'Mumbai', 'Maharashtra', 1);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO location (location_id, address, postal_code, city, state_province, country_id)
+VALUES (3, '789 Oak St', 11223, 'Madrid', 'Madrid', 3);
+INSERT INTO location (location_id, address, postal_code, city, state_province, country_id)
+^C
+mysql> VALUES (3, '789 Oak St', 11223, 'Madrid', 'Madrid', 3);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(3, '789 Oak St', 11223, 'Madrid', 'Madrid', 3)' at line 1
+mysql> INSERT INTO location (location_id, address, postal_code, city, state_province, country_id) VALUES (3, '789 Oak St', 11223, 'Barcelona', 'Barcelona', 3);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from location;
++-------------+------------+-------------+-----------+----------------+------------+
+| location_id | address    | postal_code | city      | state_province | country_id |
++-------------+------------+-------------+-----------+----------------+------------+
+|           1 | 456 Elm St |       67890 | Mumbai    | Maharashtra    |          1 |
+|           3 | 789 Oak St |       11223 | Barcelona | Barcelona      |          3 |
++-------------+------------+-------------+-----------+----------------+------------+
+2 rows in set (0.00 sec)
+
+mysql> DELETE FROM location WHERE location_id='3';
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from location;
++-------------+------------+-------------+--------+----------------+------------+
+| location_id | address    | postal_code | city   | state_province | country_id |
++-------------+------------+-------------+--------+----------------+------------+
+|           1 | 456 Elm St |       67890 | Mumbai | Maharashtra    |          1 |
++-------------+------------+-------------+--------+----------------+------------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO location (location_id, address, postal_code, city, state_province, country_id) VALUES (2, '789 Oak St', 11223, 'Barcelona', 'Barcelona', 3);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO location (location_id, address, postal_code, city, state_province, country_id)VALUES (3, '101 Pine St', 44556, 'Lagos', 'Lagos', 4);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from location;
++-------------+-------------+-------------+-----------+----------------+------------+
+| location_id | address     | postal_code | city      | state_province | country_id |
++-------------+-------------+-------------+-----------+----------------+------------+
+|           1 | 456 Elm St  |       67890 | Mumbai    | Maharashtra    |          1 |
+|           2 | 789 Oak St  |       11223 | Barcelona | Barcelona      |          3 |
+|           3 | 101 Pine St |       44556 | Lagos     | Lagos          |          4 |
++-------------+-------------+-------------+-----------+----------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO location (location_id, address, postal_code, city, state_province, country_id)VALUES (4, '202 Maple St', 66778, 'Toronto', 'Ontario', 5);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from location;
++-------------+--------------+-------------+-----------+----------------+------------+
+| location_id | address      | postal_code | city      | state_province | country_id |
++-------------+--------------+-------------+-----------+----------------+------------+
+|           1 | 456 Elm St   |       67890 | Mumbai    | Maharashtra    |          1 |
+|           2 | 789 Oak St   |       11223 | Barcelona | Barcelona      |          3 |
+|           3 | 101 Pine St  |       44556 | Lagos     | Lagos          |          4 |
+|           4 | 202 Maple St |       66778 | Toronto   | Ontario        |          5 |
++-------------+--------------+-------------+-----------+----------------+------------+
+4 rows in set (0.00 sec)
+
+mysql> INSERT INTO location (location_id, address, postal_code, city, state_province, country_id)VALUES (5, '456 Elm St', 67890, 'Buenos Aires', 'Buenos Aires', 2);
+INSERT INTO location (location_id, address, postal_code, city, state_province, country_id)VALUES (5, '456 Elm St', 67890, 'Buenos Aires', 'Buenos Aires', 2);
+^C
+mysql> INSERT INTO location (location_id, address, postal_code, city, state_province, country_id)VALUES (5, '456 Elm St', 67890, 'Buenos Aires', 'Buenos Aires', 2);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from location;
++-------------+--------------+-------------+--------------+----------------+------------+
+| location_id | address      | postal_code | city         | state_province | country_id |
++-------------+--------------+-------------+--------------+----------------+------------+
+|           1 | 456 Elm St   |       67890 | Mumbai       | Maharashtra    |          1 |
+|           2 | 789 Oak St   |       11223 | Barcelona    | Barcelona      |          3 |
+|           3 | 101 Pine St  |       44556 | Lagos        | Lagos          |          4 |
+|           4 | 202 Maple St |       66778 | Toronto      | Ontario        |          5 |
+|           5 | 456 Elm St   |       67890 | Buenos Aires | Buenos Aires   |          2 |
++-------------+--------------+-------------+--------------+----------------+------------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO department (department_id, department_name, location_id)VALUES (1, 'Sales', 1);
+INSERT INTO department (department_id, department_name, location_id)VALUES (1, 'Sales', 1);
+^C
+mysql> INSERT INTO department (department_id, department_name, location_id)VALUES (1, 'Sales', 1);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO department (department_id, department_name, location_id)VALUES (2, 'Marketing', 2);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO department (department_id, department_name, location_id)VALUES (3, 'Finance', 3);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO department (department_id, department_name, location_id)VALUES (4, 'HR', 4);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO department (department_id, department_name, location_id)VALUES (5, 'IT', 5);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from department;
++---------------+-----------------+-------------+
+| department_id | department_name | location_id |
++---------------+-----------------+-------------+
+|             1 | Sales           |           1 |
+|             2 | Marketing       |           2 |
+|             3 | Finance         |           3 |
+|             4 | HR              |           4 |
+|             5 | IT              |           5 |
++---------------+-----------------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO job (job_id, job_title, min_salary, max_salary)VALUES (1, 'Software Engineer', 50000, 120000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO job (job_id, job_title, min_salary, max_salary)VALUES (2, 'Data Scientist', 60000, 130000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO job (job_id, job_title, min_salary, max_salary)VALUES (3, 'HR Manager', 40000, 90000);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO job (job_id, job_title, min_salary, max_salary)VALUES (4, 'Product Manager', 70000, 150000);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO job (job_id, job_title, min_salary, max_salary)VALUES (5, 'Database Administrator', 55000, 110000);
+ERROR 1406 (22001): Data too long for column 'job_title' at row 1
+mysql> INSERT INTO job (job_id, job_title, min_salary, max_salary)VALUES (5, 'Database Administrator', 55000, 110000);
+ERROR 1406 (22001): Data too long for column 'job_title' at row 1
+mysql> INSERT INTO job (job_id, job_title, min_salary, max_salary)
+VALUES (5, 'Database Administrator', 55000, 110000);
+INSERT INTO job (job_id, job_title, min_salary, max_salary)
+^C
+mysql> VALUES (5, 'Database Administrator', 55000, 110000);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(5, 'Database Administrator', 55000, 110000)' at line 1
+mysql> INSERT INTO job (job_id, job_title, min_salary, max_salary)
+    -> VALUES (5, 'Database Administrator', 55000, 110000);
+ERROR 1406 (22001): Data too long for column 'job_title' at row 1
+mysql> INSERT INTO job (job_id, job_title, min_salary, max_salary)VALUES (5, 'Database Administrator', 55000, 110000);
+ERROR 1406 (22001): Data too long for column 'job_title' at row 1
+mysql> INSERT INTO job (job_id, job_title, min_salary, max_salary)VALUES (5, 'Database Administrator', 55000, 110000);
+ERROR 1406 (22001): Data too long for column 'job_title' at row 1
+mysql> INSERT INTO job (job_id, job_title, min_salary, max_salary)VALUES (5, 'Database Admin', 55000, 110000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from job;
++--------+-------------------+------------+------------+
+| job_id | job_title         | min_salary | max_salary |
++--------+-------------------+------------+------------+
+|      1 | Software Engineer |      50000 |     120000 |
+|      2 | Data Scientist    |      60000 |     130000 |
+|      3 | HR Manager        |      40000 |      90000 |
+|      4 | Product Manager   |      70000 |     150000 |
+|      5 | Database Admin    |      55000 |     110000 |
++--------+-------------------+------------+------------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO employee01 (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id)VALUES (1, 'John', 'Doe', 'john.doe@example.com', 9876543210, '2025-03-06', 1, 75000, 'M101', 1);
+ERROR 1264 (22003): Out of range value for column 'phone_number' at row 1
+mysql> INSERT INTO employee01 (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id)VALUES (1, 'John', 'Doe', 'john.doe@example.com', 96543210, '2025-03-06', 1, 75000, 'M101', 1);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO employee01 (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id)VALUES (2, 'Alice', 'Smith', 'alice.smith@example.com', 98773211, '2024-02-15', 2, 80000, 'M102', 2);
+ERROR 1406 (22001): Data too long for column 'email' at row 1
+mysql> INSERT INTO employee01 (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id)VALUES (2, 'Alice', 'Smith', 'alice.sh@example.com', 98773211, '2024-02-15', 2, 80000, 'M102', 2);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from emmployee;
+ERROR 1146 (42S02): Table 'region53.emmployee' doesn't exist
+mysql> select * from emmployee01;
+ERROR 1146 (42S02): Table 'region53.emmployee01' doesn't exist
+mysql> select * from employee01;
++-------------+------------+-----------+----------------------+--------------+------------+--------+--------+------------+---------------+
+| employee_id | first_name | last_name | email                | phone_number | hire_date  | job_id | salary | manager_id | department_id |
++-------------+------------+-----------+----------------------+--------------+------------+--------+--------+------------+---------------+
+|           1 | John       | Doe       | john.doe@example.com |     96543210 | 2025-03-06 |      1 |  75000 | M101       |             1 |
+|           2 | Alice      | Smith     | alice.sh@example.com |     98773211 | 2024-02-15 |      2 |  80000 | M102       |             2 |
++-------------+------------+-----------+----------------------+--------------+------------+--------+--------+------------+---------------+
+2 rows in set (0.00 sec)
+
+mysql> INSERT INTO dependent (dependent_id, job_title, first_name, last_name, relationship, employee_id)VALUES (1, 'N/A', 'Jane', 'Doe', 'Spouse', 1);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO dependent (dependent_id, job_title, first_name, last_name, relationship, employee_id)VALUES (2, 'Teacher', 'Sam', 'Doe', 'Child', 1);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO dependent (dependent_id, job_title, first_name, last_name, relationship, employee_id)VALUES (3, 'Engineer', 'Sara', 'Smith', 'Spouse', 2);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from dependent;
++--------------+-----------+------------+-----------+--------------+-------------+
+| dependent_id | job_title | first_name | last_name | relationship | employee_id |
++--------------+-----------+------------+-----------+--------------+-------------+
+|            1 | N/A       | Jane       | Doe       | Spouse       |           1 |
+|            2 | Teacher   | Sam        | Doe       | Child        |           1 |
+|            3 | Engineer  | Sara       | Smith     | Spouse       |           2 |
++--------------+-----------+------------+-----------+--------------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> 
+
+
+
+ANSWERS:
+
+
+
+
+
+1)-> 
+
+
+SELECT e.employee_id,e.first_name,e.last_name FROM employee01 e JOIN department d ON e.department_id = d.department_id JOIN location l ON d.location_id = l.location_id WHERE l.location_id = 1700;
+
+Empty set (0.00 sec)
+
+
+
+
+2)->
+
+ SELECT e.* FROM employee01 e JOIN department d ON e.department_id = d.department_id JOIN location l ON d.location_id = l.location_id WHERE l.location_id != 1700;
++-------------+------------+-----------+----------------------+--------------+------------+--------+--------+------------+---------------+
+| employee_id | first_name | last_name | email                | phone_number | hire_date  | job_id | salary | manager_id | department_id |
++-------------+------------+-----------+----------------------+--------------+------------+--------+--------+------------+---------------+
+|           1 | John       | Doe       | john.doe@example.com |     96543210 | 2025-03-06 |      1 |  75000 | M101       |             1 |
+|           2 | Alice      | Smith     | alice.sh@example.com |     98773211 | 2024-02-15 |      2 |  80000 | M102       |             2 |
++-------------+------------+-----------+----------------------+--------------+------------+--------+--------+------------+---------------+
+2 rows in set (0.00 sec)
+
+
+3)->
+
+SELECT * FROM employee01 WHERE salary = (SELECT MAX(salary) FROM employee01);
++-------------+------------+-----------+----------------------+--------------+------------+--------+--------+------------+---------------+
+| employee_id | first_name | last_name | email                | phone_number | hire_date  | job_id | salary | manager_id | department_id |
++-------------+------------+-----------+----------------------+--------------+------------+--------+--------+------------+---------------+
+|           2 | Alice      | Smith     | alice.sh@example.com |     98773211 | 2024-02-15 |      2 |  80000 | M102       |             2 |
++-------------+------------+-----------+----------------------+--------------+------------+--------+--------+------------+---------------+
+1 row in set (0.00 sec)
+
+
+4)->
+
+
+
+ SELECT * FROM employee01 WHERE salary > (SELECT AVG(salary) FROM employee01);
++-------------+------------+-----------+----------------------+--------------+------------+--------+--------+------------+---------------+
+| employee_id | first_name | last_name | email                | phone_number | hire_date  | job_id | salary | manager_id | department_id |
++-------------+------------+-----------+----------------------+--------------+------------+--------+--------+------------+---------------+
+|           2 | Alice      | Smith     | alice.sh@example.com |     98773211 | 2024-02-15 |      2 |  80000 | M102       |             2 |
++-------------+------------+-----------+----------------------+--------------+------------+--------+--------+------------+---------------+
+1 row in set (0.00 sec)
+
+
+
+
+5)->
+
+
+SELECT d.department_id, d.department_name FROM department d JOIN employee01 e ON d.department_id = e.department_id WHERE e.salary > 10000 GROUP BY d.department_id, d.department_name;
++---------------+-----------------+
+| department_id | department_name |
++---------------+-----------------+
+|             1 | Sales           |
+|             2 | Marketing       |
++---------------+-----------------+
+2 rows in set (0.00 sec)
+
+
+6)->
+
+ SELECT d.department_id, d.department_name FROM department d JOIN employee01 e ON d.department_id = e.department_id WHERE e.salary < 10000 GROUP BY d.department_id, d.department_name;
+ 
+Empty set (0.00 sec)
+
+
+7)->
+
+
+ SELECT * FROM employee01 e WHERE e.salary > (SELECT MIN(salary) FROM employee01 WHERE department_id = e.department_id);
+Empty set (0.00 sec)
+
+
+8)->
+
+SELECT * FROM employee01 e WHERE e.salary >= (SELECT MAX(salary) FROM employee01 WHERE department_id = e.department_id);
++-------------+------------+-----------+----------------------+--------------+------------+--------+--------+------------+---------------+
+| employee_id | first_name | last_name | email                | phone_number | hire_date  | job_id | salary | manager_id | department_id |
++-------------+------------+-----------+----------------------+--------------+------------+--------+--------+------------+---------------+
+|           1 | John       | Doe       | john.doe@example.com |     96543210 | 2025-03-06 |      1 |  75000 | M101       |             1 |
+|           2 | Alice      | Smith     | alice.sh@example.com |     98773211 | 2024-02-15 |      2 |  80000 | M102       |             2 |
++-------------+------------+-----------+----------------------+--------------+------------+--------+--------+------------+---------------+
+2 rows in set (0.00 sec)
+
+
+
+
