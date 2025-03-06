@@ -1,0 +1,624 @@
+s2mcabatch2@LAB6:~/Desktop$ mysql -u s2mcabatch2 -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 12
+Server version: 8.0.36-0ubuntu0.20.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database college;
+Query OK, 1 row affected (0.01 sec)
+
+
+mysql> use college;;
+Database changed
+
+mysql> CREATE TABLE student(roll_no int,name varchar(100),dob date,address varchar(100),phone varchar(11),blood_grp varchar(19));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SELECT * FROM student;
+Empty set (0.01 sec)
+
+
+
+
+mysql> CREATE TABLE students(roll_no int,name varchar(100),dob date,address text(100),phone int(10),blood_grp varchar(19));
+Query OK, 0 rows affected, 1 warning (0.03 sec)
+
+mysql> CREATE TABLE course(course_id int,course_name varchar(100),duration int(19));
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+
+
+mysql> show tables;
++-------------------+
+| Tables_in_college |
++-------------------+
+| course            |
+| student           |
+| students          |
++-------------------+
+3 rows in set (0.00 sec)
+
+mysql> describe students;
++-----------+--------------+------+-----+---------+-------+
+| Field     | Type         | Null | Key | Default | Extra |
++-----------+--------------+------+-----+---------+-------+
+| roll_no   | int          | YES  |     | NULL    |       |
+| name      | varchar(100) | YES  |     | NULL    |       |
+| dob       | date         | YES  |     | NULL    |       |
+| address   | text         | YES  |     | NULL    |       |
+| phone     | int          | YES  |     | NULL    |       |
+| blood_grp | varchar(19)  | YES  |     | NULL    |       |
++-----------+--------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> describe course;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| course_id   | int          | YES  |     | NULL    |       |
+| course_name | varchar(100) | YES  |     | NULL    |       |
+| duration    | int          | YES  |     | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+
+mysql> ALTER TABLE students DROP COLUMN blood_grp;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE students ADD Adar_no int(101);
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 1
+
+mysql> describe students;
++---------+--------------+------+-----+---------+-------+
+| Field   | Type         | Null | Key | Default | Extra |
++---------+--------------+------+-----+---------+-------+
+| roll_no | int          | YES  |     | NULL    |       |
+| name    | varchar(100) | YES  |     | NULL    |       |
+| dob     | date         | YES  |     | NULL    |       |
+| address | text         | YES  |     | NULL    |       |
+| phone   | int          | YES  |     | NULL    |       |
+| Adar_no | int          | YES  |     | NULL    |       |
++---------+--------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> ALTER TABLE students MODIFY phone varchar(101);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DROP TABLE students;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> DROP TABLE course;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> DROP DATABASE college;
+Query OK, 1 row affected (0.02 sec)
+
+
+
+
+
+
+
+
+
+
+
+mysql> create database organisation;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> use organisation;
+Database changed
+
+mysql> CREATE TABLE employee(emp_no int,emp_name varchar(100),dob date,address text(100),phone int(10),dept varchar(19),salary int(100));
+Query OK, 0 rows affected, 2 warnings (0.03 sec)
+
+mysql> describe employee;
++----------+--------------+------+-----+---------+-------+
+| Field    | Type         | Null | Key | Default | Extra |
++----------+--------------+------+-----+---------+-------+
+| emp_no   | int          | YES  |     | NULL    |       |
+| emp_name | varchar(100) | YES  |     | NULL    |       |
+| dob      | date         | YES  |     | NULL    |       |
+| address  | text         | YES  |     | NULL    |       |
+| phone    | int          | YES  |     | NULL    |       |
+| dept     | varchar(19)  | YES  |     | NULL    |       |
+| salary   | int          | YES  |     | NULL    |       |
++----------+--------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+
+mysql> CREATE TABLE department(dept_no varchar(100),dept_name varchar(100),location varchar(19));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> show tables;
++------------------------+
+| Tables_in_organisation |
++------------------------+
+| department             |
+| employee               |
++------------------------+
+2 rows in set (0.00 sec)
+
+mysql> describe department;
++-----------+--------------+------+-----+---------+-------+
+| Field     | Type         | Null | Key | Default | Extra |
++-----------+--------------+------+-----+---------+-------+
+| dept_no   | varchar(100) | YES  |     | NULL    |       |
+| dept_name | varchar(100) | YES  |     | NULL    |       |
+| location  | varchar(19)  | YES  |     | NULL    |       |
++-----------+--------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+mysql> ALTER TABLE employee ADD designation varchar(101);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+
+mysql> ALTER TABLE department DROP COLUMN location;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe department;
++-----------+--------------+------+-----+---------+-------+
+| Field     | Type         | Null | Key | Default | Extra |
++-----------+--------------+------+-----+---------+-------+
+| dept_no   | varchar(100) | YES  |     | NULL    |       |
+| dept_name | varchar(100) | YES  |     | NULL    |       |
++-----------+--------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> describe employee;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| emp_no      | int          | YES  |     | NULL    |       |
+| emp_name    | varchar(100) | YES  |     | NULL    |       |
+| dob         | date         | YES  |     | NULL    |       |
+| address     | text         | YES  |     | NULL    |       |
+| phone       | int          | YES  |     | NULL    |       |
+| dept        | varchar(19)  | YES  |     | NULL    |       |
+| salary      | int          | YES  |     | NULL    |       |
+| designation | varchar(101) | YES  |     | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+exp 3
+
+
+
+
+
+
+
+s2mcabatch2@LAB6:~/Desktop/dbms$ mysql -u s2mcabatch2 -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.36-0ubuntu0.20.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use organisation;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> use organization;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> use organizations;
+ERROR 1049 (42000): Unknown database 'organizations'
+mysql> desc employee;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| emp_no      | varchar(10) | YES  |     | NULL    |       |
+| emp_name    | varchar(20) | YES  |     | NULL    |       |
+| mobile_no   | int         | YES  |     | NULL    |       |
+| dept_n0     | varchar(10) | YES  |     | NULL    |       |
+| salary      | int         | YES  |     | NULL    |       |
+| designation | varchar(30) | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> desc department;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| dept_no   | varchar(10) | NO   | PRI | NULL    |       |
+| dept_name | varchar(30) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select * from employee;
++--------+----------+------------+---------+--------+-------------+
+| emp_no | emp_name | mobile_no  | dept_n0 | salary | designation |
++--------+----------+------------+---------+--------+-------------+
+| E01    | john     |  999999999 | d01     |  45000 | manager     |
+| E02    | jane     | 1234587890 | d02     |  40000 | developer   |
+| E03    | sam      | 1234587809 | d01     |  40900 | tester      |
+| E04    | alice    | 1234534809 | d03     | 230900 | developer   |
+| E05    | bob      |  901234567 | d02     |  45000 | manager     |
+| E06    | charlie  |  901234589 | d04     |  55000 | tester      |
+| E07    | david    | 1234569870 | d03     |  95000 | tester      |
+| E08    | eva      | 1243569870 | d03     |  85000 | assistant   |
+| E09    | joe      |  901234599 | d01     |  45000 | manager     |
+| E10    | olivia   |  901234547 | d04     |  28000 | tester      |
++--------+----------+------------+---------+--------+-------------+
+10 rows in set (0.01 sec)
+
+mysql> select * from department;
++---------+------------+
+| dept_no | dept_name  |
++---------+------------+
+| d01     | sales      |
+| d02     | sales      |
+| d03     | marketing  |
+| d04     | finance    |
+| d06     | sales      |
+| d07     | IT         |
+| d08     | accounting |
+| d09     | accounting |
+| d10     | IT         |
++---------+------------+
+9 rows in set (0.01 sec)
+
+mysql> select distinct designation from employee;
++-------------+
+| designation |
++-------------+
+| manager     |
+| developer   |
+| tester      |
+| assistant   |
++-------------+
+4 rows in set (0.00 sec)
+
+mysql> update employee set salary=45000 where designation="manager";
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 3  Changed: 0  Warnings: 0
+
+mysql> select * from employee;
++--------+----------+------------+---------+--------+-------------+
+| emp_no | emp_name | mobile_no  | dept_n0 | salary | designation |
++--------+----------+------------+---------+--------+-------------+
+| E01    | john     |  999999999 | d01     |  45000 | manager     |
+| E02    | jane     | 1234587890 | d02     |  40000 | developer   |
+| E03    | sam      | 1234587809 | d01     |  40900 | tester      |
+| E04    | alice    | 1234534809 | d03     | 230900 | developer   |
+| E05    | bob      |  901234567 | d02     |  45000 | manager     |
+| E06    | charlie  |  901234589 | d04     |  55000 | tester      |
+| E07    | david    | 1234569870 | d03     |  95000 | tester      |
+| E08    | eva      | 1243569870 | d03     |  85000 | assistant   |
+| E09    | joe      |  901234599 | d01     |  45000 | manager     |
+| E10    | olivia   |  901234547 | d04     |  28000 | tester      |
++--------+----------+------------+---------+--------+-------------+
+10 rows in set (0.00 sec)
+
+mysql> delete from employee where salary=28000;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from employee;
++--------+----------+------------+---------+--------+-------------+
+| emp_no | emp_name | mobile_no  | dept_n0 | salary | designation |
++--------+----------+------------+---------+--------+-------------+
+| E01    | john     |  999999999 | d01     |  45000 | manager     |
+| E02    | jane     | 1234587890 | d02     |  40000 | developer   |
+| E03    | sam      | 1234587809 | d01     |  40900 | tester      |
+| E04    | alice    | 1234534809 | d03     | 230900 | developer   |
+| E05    | bob      |  901234567 | d02     |  45000 | manager     |
+| E06    | charlie  |  901234589 | d04     |  55000 | tester      |
+| E07    | david    | 1234569870 | d03     |  95000 | tester      |
+| E08    | eva      | 1243569870 | d03     |  85000 | assistant   |
+| E09    | joe      |  901234599 | d01     |  45000 | manager     |
++--------+----------+------------+---------+--------+-------------+
+9 rows in set (0.00 sec)
+
+mysql> select emp_name,mobile from employee where emp_name like 'a%';
+ERROR 1054 (42S22): Unknown column 'mobile' in 'field list'
+mysql> select emp_name,mobile_no from employee where emp_name like 'a%';
++----------+------------+
+| emp_name | mobile_no  |
++----------+------------+
+| alice    | 1234534809 |
++----------+------------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee where length(emp_name) >= 3 and salary >55000;
++--------+----------+------------+---------+--------+-------------+
+| emp_no | emp_name | mobile_no  | dept_n0 | salary | designation |
++--------+----------+------------+---------+--------+-------------+
+| E04    | alice    | 1234534809 | d03     | 230900 | developer   |
+| E07    | david    | 1234569870 | d03     |  95000 | tester      |
+| E08    | eva      | 1243569870 | d03     |  85000 | assistant   |
++--------+----------+------------+---------+--------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from employee where emp_no in('E01','E02'.'E03');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.'E03')' at line 1
+mysql> select * from employee where emp_no in('E01','E02','E03');
++--------+----------+------------+---------+--------+-------------+
+| emp_no | emp_name | mobile_no  | dept_n0 | salary | designation |
++--------+----------+------------+---------+--------+-------------+
+| E01    | john     |  999999999 | d01     |  45000 | manager     |
+| E02    | jane     | 1234587890 | d02     |  40000 | developer   |
+| E03    | sam      | 1234587809 | d01     |  40900 | tester      |
++--------+----------+------------+---------+--------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> select emp_name,emp_no from employee where salary between 120000 and 300000;
++----------+--------+
+| emp_name | emp_no |
++----------+--------+
+| alice    | E04    |
++----------+--------+
+1 row in set (0.00 sec)
+
+mysql> select emp_name,emp_no from employee where salary between 10000 and 300000;
++----------+--------+
+| emp_name | emp_no |
++----------+--------+
+| john     | E01    |
+| jane     | E02    |
+| sam      | E03    |
+| alice    | E04    |
+| bob      | E05    |
+| charlie  | E06    |
+| david    | E07    |
+| eva      | E08    |
+| joe      | E09    |
++----------+--------+
+9 rows in set (0.00 sec)
+
+mysql> select * from employee where designation in('manager','assistant');
++--------+----------+------------+---------+--------+-------------+
+| emp_no | emp_name | mobile_no  | dept_n0 | salary | designation |
++--------+----------+------------+---------+--------+-------------+
+| E01    | john     |  999999999 | d01     |  45000 | manager     |
+| E05    | bob      |  901234567 | d02     |  45000 | manager     |
+| E08    | eva      | 1243569870 | d03     |  85000 | assistant   |
+| E09    | joe      |  901234599 | d01     |  45000 | manager     |
++--------+----------+------------+---------+--------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select dept_no,count(*) as employee_count from employee group by dept_no;
+ERROR 1054 (42S22): Unknown column 'dept_no' in 'field list'
+mysql> select dept_no,count(*) as employee_count from employee group by dept_no;
+ERROR 1054 (42S22): Unknown column 'dept_no' in 'field list'
+mysql> select dept_no,count(*) as employee_count from employee group by dept_no;
+ERROR 1054 (42S22): Unknown column 'dept_no' in 'field list'
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> select dept_no,COUNT(*) as employee_count from employee group by dept_no;
+ERROR 1054 (42S22): Unknown column 'dept_no' in 'field list'
+mysql> select dept_no,COUNT(*) as employee_count from employee group by dept_no1;
+ERROR 1054 (42S22): Unknown column 'dept_no' in 'field list'
+mysql> select dept_no ,COUNT(*) as employee_count from employee group by dept_no;
+ERROR 1054 (42S22): Unknown column 'dept_no' in 'field list'
+mysql> select employee ,COUNT(*) as employee_count from employee group by dept_no;
+ERROR 1054 (42S22): Unknown column 'employee' in 'field list'
+mysql> select dept_no ,COUNT(*) as employee_count from employee group by dept_no;
+ERROR 1054 (42S22): Unknown column 'dept_no' in 'field list'
+mysql> 
+mysql> 
+mysql> 
+mysql> 
+mysql> SELECT dept_no, COUNT(*) AS employee_count
+    -> FROM employee
+    -> GROUP BY dept_no;
+ERROR 1054 (42S22): Unknown column 'dept_no' in 'field list'
+mysql> SELECT dept_no, COUNT(*) AS employee_count FROM employee GROUP BY dept_no;
+ERROR 1054 (42S22): Unknown column 'dept_no' in 'field list'
+mysql> DESCRIBE employee;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| emp_no      | varchar(10) | YES  |     | NULL    |       |
+| emp_name    | varchar(20) | YES  |     | NULL    |       |
+| mobile_no   | int         | YES  |     | NULL    |       |
+| dept_n0     | varchar(10) | YES  |     | NULL    |       |
+| salary      | int         | YES  |     | NULL    |       |
+| designation | varchar(30) | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT department_id, COUNT(*) AS employee_count
+    -> FROM employee
+    -> GROUP BY department_id;
+ERROR 1054 (42S22): Unknown column 'department_id' in 'field list'
+mysql> SHOW TABLES;
++------------------------+
+| Tables_in_organization |
++------------------------+
+| department             |
+| employee               |
+| orders                 |
+| persons                |
++------------------------+
+4 rows in set (0.01 sec)
+
+mysql> SELECT dept_n0, COUNT(*) AS employee_count
+    -> FROM employee
+    -> GROUP BY dept_n0;
++---------+----------------+
+| dept_n0 | employee_count |
++---------+----------------+
+| d01     |              3 |
+| d02     |              2 |
+| d03     |              3 |
+| d04     |              1 |
++---------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT dept_n0, avg(salary) AS avg salary FROM employee GROUP BY dept_n0;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'salary FROM employee GROUP BY dept_n0' at line 1
+mysql> SELECT dept_n0, avg(salary) AS avg salary FROM employee GROUP BY dept_n0
+    -> GROUP BY dept_n0;^[[A
+       FROM employee
+^C
+mysql> SELECT dept_n0, avg(salary) AS avgsalary 
+    -> from employee
+    -> group by deptn0;
+ERROR 1054 (42S22): Unknown column 'deptn0' in 'group statement'
+mysql> SELECT dept_n0, avg(salary) AS avgsalary 
+    -> from employee 
+    -> group by deptno;
+ERROR 1054 (42S22): Unknown column 'deptno' in 'group statement'
+mysql> SELECT dept_n0, COUNT(*) AS employee_count
+FROM employee
+GROUP BY dept_n0;
+SELECT dept_n0, COUNT(*) AS employee_count
+^C
+mysql> FROM employee
+    -> GROUP BY dept_n0;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM employee
+GROUP BY dept_n0' at line 1
+mysql> SELECT dept_n0, COUNT(*) AS employee_count
+    -> FROM employee
+    -> GROUP BY dept_n0;
++---------+----------------+
+| dept_n0 | employee_count |
++---------+----------------+
+| d01     |              3 |
+| d02     |              2 |
+| d03     |              3 |
+| d04     |              1 |
++---------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT dept_n0, sum(salary) AS ttlsalary
+    -> from employee
+    -> group by dept_n0;
++---------+-----------+
+| dept_n0 | ttlsalary |
++---------+-----------+
+| d01     |    130900 |
+| d02     |     85000 |
+| d03     |    410900 |
+| d04     |     55000 |
++---------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT dept_n0, maax(salary) AS highsalary 
+    -> from employee
+    -> group by dept_n0;
+ERROR 1305 (42000): FUNCTION organization.maax does not exist
+mysql> SELECT dept_n0, max(salary) AS highsalary
+    -> from employee
+    -> group by dept_n0;
++---------+------------+
+| dept_n0 | highsalary |
++---------+------------+
+| d01     |      45000 |
+| d02     |      45000 |
+| d03     |     230900 |
+| d04     |      55000 |
++---------+------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT dept_n0, avg(salary) AS avgsalary
+    -> from employee
+    -> where dept_n0 <> 'd05'
+    -> group by dept_n0;
++---------+-------------+
+| dept_n0 | avgsalary   |
++---------+-------------+
+| d01     |  43633.3333 |
+| d02     |  42500.0000 |
+| d03     | 136966.6667 |
+| d04     |  55000.0000 |
++---------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT dept_n0, avg(salary) AS avgsalary
+    -> from employee
+    -> where dept_n0 <> 'd01'
+    -> group by dept_n0
+    -> having avg(salary) > 20000
+    -> order by avgsalary asc;
++---------+-------------+
+| dept_n0 | avgsalary   |
++---------+-------------+
+| d02     |  42500.0000 |
+| d04     |  55000.0000 |
+| d03     | 136966.6667 |
++---------+-------------+
+3 rows in set (0.00 sec)
+
+mysql>   
+
+
+
