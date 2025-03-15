@@ -598,5 +598,207 @@ SELECT * FROM employee01 e WHERE e.salary >= (SELECT MAX(salary) FROM employee01
 2 rows in set (0.00 sec)
 
 
+9)->mysql> SELECT AVG(department_avg_salary) AS average_of_avg_salaries FROM ( SELECT AVG(salary) AS department_avg_salary FROM employee01 GROUP BY department_id ) AS avg_salaries;
++-------------------------+
+| average_of_avg_salaries |
++-------------------------+
+|          77500.00000000 |
++-------------------------+
+
+10)->
+
+mysql> SELECT e.employee_id, e.first_name, e.last_name, e.salary,  (SELECT AVG(salary) FROM employee01) AS avg_salary,  (e.salary - (SELECT AVG(salary) FROM employee01)) AS salary_diff FROM employee01 e;
++-------------+------------+-----------+--------+------------+-------------+
+| employee_id | first_name | last_name | salary | avg_salary | salary_diff |
++-------------+------------+-----------+--------+------------+-------------+
+|           1 | John       | Doe       |  75000 | 77500.0000 |  -2500.0000 |
+|           2 | Alice      | Smith     |  80000 | 77500.0000 |   2500.0000 |
++-------------+------------+-----------+--------+------------+-------------+
 
 
+
+11)->
+
+
+ SELECT e.employee_id, e.first_name, e.last_name, e.salary FROM employee01 e WHERE e.salary > (SELECT AVG(salary) FROM employee01 WHERE department_id = e.department_id);
+Empty set (0.00 sec)
+
+
+12)->
+
+mysql> SELECT e.employee_id, e.first_name, e.last_name FROM employee01 e LEFT JOIN dependent d ON e.employee_id = d.employee_id WHERE d.dependent_id IS NULL;
+Empty set (0.00 sec)
+
+
+13)->
+
+
+mysql> SELECT e.first_name, e.last_name, d.department_name FROM employee01 e JOIN department d ON e.department_id = d.department_id WHERE d.department_id IN (1, 2, 3);
++------------+-----------+-----------------+
+| first_name | last_name | department_name |
++------------+-----------+-----------------+
+| John       | Doe       | Sales           |
+| Alice      | Smith     | Marketing       |
++------------+-----------+-----------------+
+2 rows in set (0.00 sec)
+
+
+14)->
+
+
+ SELECT e.first_name, e.last_name, j.job_title, d.department_name FROM employee01 e JOIN department d ON e.department_id = d.department_id JOIN job j ON e.job_id = j.job_id WHERE d.department_id IN (1, 2, 3) AND e.salary > 10000;
++------------+-----------+-------------------+-----------------+
+| first_name | last_name | job_title         | department_name |
++------------+-----------+-------------------+-----------------+
+| John       | Doe       | Software Engineer | Sales           |
+| Alice      | Smith     | Data Scientist    | Marketing       |
++------------+-----------+-------------------+-----------------+
+2 rows in set (0.00 sec)
+
+
+
+15)->
+
+
+ SELECT d.department_name, l.address, l.postal_code, c.country_name, r.region_name FROM department d JOIN location l ON d.location_id = l.location_id JOIN country c ON l.country_id = c.country_id JOIN region r ON c.region_id = r.region_id;
++-----------------+--------------+-------------+--------------+---------------+
+| department_name | address      | postal_code | country_name | region_name   |
++-----------------+--------------+-------------+--------------+---------------+
+| Sales           | 456 Elm St   |       67890 | India        | Asia          |
+| Marketing       | 789 Oak St   |       11223 | Spain        | Europe        |
+| Finance         | 101 Pine St  |       44556 | Nigeria      | Africa        |
+| HR              | 202 Maple St |       66778 | Canada       | North America |
+| IT              | 456 Elm St   |       67890 | Argentina    | South America |
++-----------------+--------------+-------------+--------------+---------------+
+5 rows in set (0.00 sec)
+
+
+16)->
+
+
+SELECT e.first_name, e.last_name, e.department_id, d.department_name FROM employee01 e LEFT JOIN department d ON e.department_id = d.department_id;
++------------+-----------+---------------+-----------------+
+| first_name | last_name | department_id | department_name |
++------------+-----------+---------------+-----------------+
+| John       | Doe       |             1 | Sales           |
+| Alice      | Smith     |             2 | Marketing       |
++------------+-----------+---------------+-----------------+
+2 rows in set (0.00 sec)
+
+
+
+17)->
+
+
+
+SELECT e.first_name, e.last_name, d.department_name, l.city, l.state_province 
+    -> FROM employee01 e
+    -> JOIN department d ON e.department_id = d.department_id 
+    -> JOIN location l ON d.location_id = l.location_id  -- Join with department's location_id
+    -> WHERE e.first_name LIKE '%Z%';
+Empty set (0.00 sec)
+
+
+
+18)->
+
+
+ SELECT e.first_name, e.last_name, d.department_id, d.department_name FROM department d LEFT JOIN employee01 e ON d.department_id = e.department_id;
++------------+-----------+---------------+-----------------+
+| first_name | last_name | department_id | department_name |
++------------+-----------+---------------+-----------------+
+| John       | Doe       |             1 | Sales           |
+| Alice      | Smith     |             2 | Marketing       |
+| NULL       | NULL      |             3 | Finance         |
+| NULL       | NULL      |             4 | HR              |
+| NULL       | NULL      |             5 | IT              |
++------------+-----------+---------------+-----------------+
+5 rows in set (0.00 sec)
+
+
+
+19)->
+
+
+SELECT e.first_name AS employee_name, m.first_name AS manager_name FROM employee01 e LEFT JOIN employee01 m ON e.manager_id = m.employee_id;
++---------------+--------------+
+| employee_name | manager_name |
++---------------+--------------+
+| John          | NULL         |
+| Alice         | NULL         |
++---------------+--------------+
+2 rows in set, 2 warnings (0.00 sec)
+
+
+
+
+20)->
+
+
+
+SELECT e.first_name, e.last_name, e.department_id FROM employee01 e WHERE e.department_id = (SELECT department_id FROM employee01 WHERE last_name = 'Taylor');
+Empty set (0.00 sec)
+
+
+
+
+21)->
+
+
+SELECT j.job_title, e.first_name, e.last_name, (j.max_salary - e.salary) AS salary_difference FROM employee01 e JOIN job j ON e.job_id = j.job_id;
++-------------------+------------+-----------+-------------------+
+| job_title         | first_name | last_name | salary_difference |
++-------------------+------------+-----------+-------------------+
+| Software Engineer | John       | Doe       |             45000 |
+| Data Scientist    | Alice      | Smith     |             50000 |
++-------------------+------------+-----------+-------------------+
+2 rows in set (0.00 sec)
+
+
+
+
+22)->
+
+
+SELECT d.department_name, AVG(e.salary) AS avg_salary, COUNT(e.employee_id) AS num_employees FROM department d JOIN employee01 e ON d.department_id = e.department_id GROUP BY d.department_name;
++-----------------+------------+---------------+
+| department_name | avg_salary | num_employees |
++-----------------+------------+---------------+
+| Sales           | 75000.0000 |             1 |
+| Marketing       | 80000.0000 |             1 |
++-----------------+------------+---------------+
+2 rows in set (0.00 sec)
+
+
+
+
+
+23)->
+
+
+> CREATE VIEW employee_details AS 
+    -> SELECT e.first_name, e.last_name, e.employee_id, e.phone_number, j.job_title, 
+    ->        d.department_name, m.first_name AS manager_name 
+    -> FROM employee01 e
+    -> JOIN job j ON e.job_id = j.job_id
+    -> JOIN department d ON e.department_id = d.department_id 
+    -> LEFT JOIN employee01 m ON e.manager_id = m.employee_id
+    -> JOIN location l ON d.location_id = l.location_id  -- Join location via department
+    -> WHERE l.city = 'Delhi';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> 
+mysql> SELECT * FROM employee_details;
+Empty set (0.00 sec)
+
+
+
+
+24)->
+
+
+
+
+
+
+25)->
