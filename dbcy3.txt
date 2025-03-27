@@ -1,0 +1,164 @@
+
+labcycle-3
+
+1)->
+
+
+
+mysql> create table account(id int AUTO_INCREMENT PRIMARY KEY,amount decimal(20,5));
+Query OK, 0 rows affected (0.06 sec)
+
+
+
+mysql> insert into account(id,amount)values(101,15000),(102,156560),(103,1000);
+Query OK, 3 rows affected (0.02 sec)
+
+
+mysql> select * from account;
++-----+--------------+
+| id  | amount       |
++-----+--------------+
+| 101 |  15000.00000 |
+| 102 | 156560.00000 |
+| 103 |   1000.00000 |
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE withdraw1(IN acc_id INT, IN withdraw_am DECIMAL(10,2))
+BEGIN
+    DECLARE current_bal DECIMAL(10,2);
+    DECLARE acc_exist INT;
+
+    SELECT COUNT(*) INTO acc_exist FROM account WHERE id = acc_id;
+    
+    IF acc_exist = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Account does not exist';
+    ELSE
+        SELECT amount INTO current_bal FROM account WHERE id = acc_id;
+        
+        IF current_bal - withdraw_am < 1000 THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Insufficient balance';
+        ELSE
+            UPDATE account SET amount = amount - withdraw_am WHERE id = acc_id;
+            
+            SIGNAL SQLSTATE '01000'
+            SET MESSAGE_TEXT = 'Withdrawal successful';
+        END IF;
+    END IF;
+END //
+
+DELIMITER ;
+
+
+
+
+
+
+mysql> call withdraw1(10,199);
+ERROR 1644 (45000): Account does not exist
+
+mysql> call withdraw1(101,2022);
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+
+mysql> call withdraw1(101,1000);
+Query OK, 0 rows affected, 1 warning (0.04 sec)
+
+mysql> call withdraw1(103,1000);
+ERROR 1644 (45000): Insufficient balance
+mysql> call withdraw1(102,10000);
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+
+mysql> SELECT * FROM account;
++-----+--------------+
+| id  | amount       |
++-----+--------------+
+| 101 |  10973.00000 |
+| 102 | 138556.00000 |
+| 103 |   1000.00000 |
++-----+--------------+
+3 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+2)->
+
+
+
+mysql> CREATE TABLE Customer (
+    ->     customer_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     name VARCHAR(100),
+    ->     city VARCHAR(100),
+    ->     credits DECIMAL(10,2)
+    -> );
+Query OK, 0 rows affected (0.13 sec)
+
+
+
+
+mysql> desc Customer;
++-------------+---------------+------+-----+---------+----------------+
+| Field       | Type          | Null | Key | Default | Extra          |
++-------------+---------------+------+-----+---------+----------------+
+| customer_id | int           | NO   | PRI | NULL    | auto_increment |
+| name        | varchar(100)  | YES  |     | NULL    |                |
+| city        | varchar(100)  | YES  |     | NULL    |                |
+| credits     | decimal(10,2) | YES  |     | NULL    |                |
++-------------+---------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+
+
+
+mysql> insert into Customer(customer_id,name,city,credits)values(10,"Sreedev","kottayam",1550.59),(11,"rgrgr","kottayamgre",155340.59),(12,"John","esfsegg",1560.59);
+Query OK, 3 rows affected (0.03 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql>     SELECT * FROM Customer;
++-------------+---------+-------------+-----------+
+| customer_id | name    | city        | credits   |
++-------------+---------+-------------+-----------+
+|          10 | Sreedev | kottayam    |   1550.59 |
+|          11 | rgrgr   | kottayamgre | 155340.59 |
+|          12 | John    | esfsegg     |   1560.59 |
++-------------+---------+-------------+-----------+
+3 rows in set (0.00 sec)
+
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE GetCustomerDetailsByName(IN customer_name VARCHAR(100))
+BEGIN
+    SELECT * FROM Customer
+    WHERE name = customer_name;
+END;
+
+CALL GetCustomerDetailsByName('John');
+DELIMITER ;
+
+
+
+
+
++-------------+------+---------+---------+
+| customer_id | name | city    | credits |
++-------------+------+---------+---------+
+|          12 | John | esfsegg | 1560.59 |
++-------------+------+---------+---------+
+1 row in set (0.02 sec)
+
